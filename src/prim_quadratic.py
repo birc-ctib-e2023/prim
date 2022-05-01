@@ -44,7 +44,7 @@ class Graph:
 def prim(graph: Graph) -> list[tuple[int, float, int]]:
     """Run the O(v²) Prim's algorithm."""
     # Initial tree
-    tree: list[tuple[int, float, int]] = []
+    tree: list[Edge] = []
     in_tree = [False] * graph.no_nodes
 
     # Start with node 0 in the tree
