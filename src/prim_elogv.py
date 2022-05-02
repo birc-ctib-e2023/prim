@@ -222,12 +222,8 @@ def prim(graph: Graph) -> list[Edge]:
     # if you truely have a cheaper route to a node outside of
     # the tree.
 
-    while heap:
-        src, w, dst = heap.pop()
-        if src is not None:
-            tree.append((src, w, dst))
-        for _, w, new in graph.edges[dst]:
-            heap.decrease_weight(new, w, dst)
+    # FIXME: Algorithm needed here!
+    ...
 
     return tree
 

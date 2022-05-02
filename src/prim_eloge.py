@@ -82,21 +82,8 @@ def prim(graph: Graph) -> list[Edge]:
     # faster, but it won't be a problem if you add them. They will be
     # filtered away when you see them later anyway.
 
-    while heap:
-        a, w, b = heapq.heappop(heap)
-        if b in seen:
-            # Skip; we have already reached here in
-            # some other way
-            continue
-
-        # Add b to the tree
-        tree.append(Edge(a, w, b))
-        seen.add(b)
-
-        # and add b's out-edges to the heap
-        for _, w, d in graph.edges[b]:
-            if d not in seen:
-                heapq.heappush(heap, Edge(b, w, d))
+    # FIXME: Algorithm needed here!
+    ...
 
     return tree
 
