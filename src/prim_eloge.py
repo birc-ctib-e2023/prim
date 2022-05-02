@@ -67,6 +67,21 @@ def prim(graph: Graph) -> list[Edge]:
     heap: list[Edge] = graph.edges[0][:]
     heapq.heapify(heap)
 
+    # Now we have a heap of all the edges going out of the tree.
+    # If we pick them in order of lowest weight, we get the
+    # minimal tree.
+    #
+    # If we don't delete edges (_,_,b) where b is already in the
+    # tree--and that would be a lot of extra work, you might get
+    # such an edge out. Don't add that to the tree, b is already
+    # there via a cheaper path; just throw those edges away.
+    #
+    # When you get a new edges (a, w, b), you need
+    # to insert all the edges out of b: (b,w',c). You can skip edges
+    # where c is already in the tree if you want, it will be a little
+    # faster, but it won't be a problem if you add them. They will be
+    # filtered away when you see them later anyway.
+
     while heap:
         a, w, b = heapq.heappop(heap)
         if b in seen:

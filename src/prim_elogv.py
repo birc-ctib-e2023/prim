@@ -117,10 +117,15 @@ class MinHeap:
         return self._weights[self._nodes[i]]
 
     def _swap(self, i: int, j: int) -> None:
-        """Swap index i and j."""
+        """
+        Swap index i and j.
+
+        When swapping indices, we also need to update
+        the mapping from nodes to index.
+        """
         ni, nj = self._nodes[i], self._nodes[j]
         self._nodes[i], self._nodes[j] = self._nodes[j], self._nodes[i]
-        self._index[ni], self._index[nj] = j, i
+        self._index[ni], self._index[nj] = j, i  # ni sits at j now and nj at i
 
     def _min_child(self, i: int) -> Optional[int]:
         """Get the smallest child of i, if there is any."""
@@ -192,6 +197,31 @@ def prim(graph: Graph) -> list[Edge]:
     tree: list[Edge] = []
 
     heap = MinHeap(graph.no_nodes)
+
+    # We have an empty tree and a heap that contains all the
+    # nodes. The nodes have infinite distance to the tree, but
+    # that's okay. If we ask for a node with minimal weight we
+    # will get an arbitrary one of them, and that is fine for
+    # the algorithm.
+    #
+    # To build the tree, pop a minimal node out one at a time.
+    # The heap.pop() function will give you an edge (src,w,dst),
+    # but src will be None if dst doesn't have an edge from
+    # the current tree. The first time you pop a node, src will
+    # be None. If the nodes in the graph are not all connected,
+    # it can happen more than once, but in the example this doesn't
+    # happen.
+    #
+    # So, keep poping edges (src,w,dst) and if src is not None,
+    # add the edge to the tree. Then consider all the new edges
+    # out of dst, graph.edges[dst]. They might provide a cheaper
+    # way to get to new nodes, so decrease the cost of getting to
+    # each destination. Don't worry if the destination is already
+    # in the tree or if the destination already has a cheaper path;
+    # the decrease_weight() method will only update the weight
+    # if you truely have a cheaper route to a node outside of
+    # the tree.
+
     while heap:
         src, w, dst = heap.pop()
         if src is not None:
