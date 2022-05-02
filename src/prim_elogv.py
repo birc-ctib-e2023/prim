@@ -65,7 +65,41 @@ def _get_optional(x: list[Node], i: int) -> Optional[Node]:
 
 
 class MinHeap:
-    """MinHeap implementation using a binary heap."""
+    """
+    Min-heap implementation using a binary heap.
+
+    We don't use the heapq implementation since it doesn't
+    give us the decrease weight functionality that we need.
+
+    It also doesn't implement the full set of heap operations,
+    since we only need a subset of them.
+    """
+
+    # We want a map from nodes dst to edges (src,w,dst)
+    # so we can see what the cheapest way is to get to dst
+    # from some node src already in the tree.
+    #
+    # At the same time, we want a heap for the dst nodes
+    # weighted by w. To do this, we have a map from each
+    # dst to the weights and src (self._weights and self._src),
+    # indexed by node id. The nodes are in a heap,
+    # src._nodes where they move around when we change their weight,
+    # so we also need a map from a node id to its position in
+    # the heap. The self._index list handles that, and it
+    # contains None or node ids as nodes we have deleted
+    # are no longer in the heap, but their id still exist
+    # as an index. This also lets us recognise if we
+    # try to insert an endge (src,w,dst) where dst is already
+    # in the tree.
+    #
+    # The self._src can also contain None, but
+    # this is for a different purpose; when we initialise the
+    # heap there are no sources that leads into the nodes from
+    # the tree, that is empty at this point. It means that we
+    # have to check if the source node is None before we add
+    # an edge to the tree, but it has the added benefit that
+    # we can create a minimal spanning forest if the nodes
+    # are not all connected in the input graph.
 
     # This is the list we use for the heap structure,
     # the others contain auxilary data
